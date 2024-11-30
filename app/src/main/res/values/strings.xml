@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">smo-uni-mobile-lab3</string>
     <string name="greeting">hallo</string>
+    <string name="loading">Loading</string>
 </resources>

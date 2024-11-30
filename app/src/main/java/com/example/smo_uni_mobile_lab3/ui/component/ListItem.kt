@@ -1,5 +1,6 @@
 package com.example.smo_uni_mobile_lab3.ui.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +26,7 @@ import com.example.smo_uni_mobile_lab3.R
 import com.example.smo_uni_mobile_lab3.models.IListItem
 
 @Composable
-fun ListItem(item: IListItem) {
+fun ListItem(item: IListItem, onDeleteClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 5.dp)
@@ -52,9 +53,28 @@ fun ListItem(item: IListItem) {
             }
 
             Column {
-                Text(text = item.title(), modifier = Modifier.padding(10.dp, 20.dp, 10.dp, 0.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = item.title(),
+                        modifier = Modifier.padding(10.dp, 20.dp, 10.dp, 0.dp)
+                            .fillMaxWidth(0.5f)
+                    )
+                    Text(
+                        text = item.id(),
+                        modifier = Modifier.padding(10.dp, 20.dp, 10.dp, 0.dp),
+                        fontSize = 10.sp
+                    )
+                    DeleteButton(onDeleteClick = onDeleteClick)
+                }
                 item.description()?.let { description ->
-                    Text(text = description, modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 20.dp), fontSize = 12.sp)
+                    Text(
+                        text = description,
+                        modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 20.dp),
+                        fontSize = 12.sp
+                    )
                 }
             }
         }

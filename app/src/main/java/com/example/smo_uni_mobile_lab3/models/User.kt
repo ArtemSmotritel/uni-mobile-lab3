@@ -1,20 +1,34 @@
 package com.example.smo_uni_mobile_lab3.models
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "user")
 data class User(
-    var id: Long,
-    var firstName: String,
-    var lastName: String,
-    var email: String,
-    var phone: String,
+    @PrimaryKey(autoGenerate = true) var id: Long,
+    @ColumnInfo(name = "first_name") var firstName: String,
+    @ColumnInfo(name = "last_name") var lastName: String,
+    @ColumnInfo(name = "email") var email: String,
+    @ColumnInfo(name = "phone") var phone: String,
 ) : IListItem {
+    @Ignore
+    override fun id(): String {
+        return id.toString()
+    }
+
+    @Ignore
     override fun title(): String {
         return "$firstName $lastName"
     }
 
+    @Ignore
     override fun description(): String {
         return "Email: $email; Phone: $phone"
     }
 
+    @Ignore
     override fun imageUrl(): String? {
         return null
     }

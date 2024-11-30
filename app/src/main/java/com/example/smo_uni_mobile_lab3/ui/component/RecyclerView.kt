@@ -19,15 +19,19 @@ fun RecyclerView(vm: MainActivityViewModel = viewModel()) {
     val state by vm.state.collectAsStateWithLifecycle()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            items(state.list) {
-                ListItem(it)
+        if (state.loading) {
+            LoadingScreen()
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                items(state.list) {
+                    ListItem(it, onDeleteClick = { vm.deleteItem(it) })
+                }
             }
         }
     }
