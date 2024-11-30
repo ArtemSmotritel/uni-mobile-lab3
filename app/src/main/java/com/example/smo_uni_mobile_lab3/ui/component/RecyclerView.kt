@@ -7,12 +7,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.smo_uni_mobile_lab3.models.IListItem
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.smo_uni_mobile_lab3.state.MainActivityViewModel
 
 @Composable
-fun RecyclerView(userDetails: List<IListItem>) {
+fun RecyclerView(vm: MainActivityViewModel = viewModel()) {
+    val state by vm.state.collectAsStateWithLifecycle()
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -21,7 +26,7 @@ fun RecyclerView(userDetails: List<IListItem>) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            items(items = userDetails) {
+            items(state.list) {
                 ListItem(it)
             }
         }

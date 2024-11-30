@@ -6,8 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.smo_uni_mobile_lab3.models.fakeData
-import com.example.smo_uni_mobile_lab3.models.tripleFakeData
 import com.example.smo_uni_mobile_lab3.ui.component.RecyclerView
 import com.example.smo_uni_mobile_lab3.ui.theme.Smounimobilelab3Theme
 
@@ -18,7 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Smounimobilelab3Theme {
-                RecyclerView(tripleFakeData())
+                RecyclerView()
             }
         }
     }
@@ -28,6 +26,5 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     Smounimobilelab3Theme {
-        RecyclerView(fakeData())
     }
 }
