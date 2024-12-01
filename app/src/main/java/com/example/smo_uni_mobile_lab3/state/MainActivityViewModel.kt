@@ -22,25 +22,16 @@ data class MainActivityState(
     var loading: Boolean = true,
 )
 
-class MainActivityViewModel(private val userDao: UserDao, private val postDao: PostDao) : ViewModel() {
+class MainActivityViewModel(private val userDao: UserDao, private val postDao: PostDao) :
+    ViewModel() {
 
     private val _state = MutableStateFlow(MainActivityState())
     val state: StateFlow<MainActivityState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            userDao.deleteAll()
-            userDao.insertAll(*fakeUsers().toTypedArray())
-
-            val users = userDao.getAll()
-
-            postDao.insertAll(*fakePosts(users).toTypedArray())
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
             combine(
-                userDao.getAllAsFlow(),
-                postDao.getAllAsFlow()
+                userDao.getAllAsFlow(), postDao.getAllAsFlow()
             ) { users, posts ->
                 users.plus(posts)
             }.collect { list ->
@@ -51,13 +42,26 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
         }
     }
 
+    fun reset() {
+        viewModelScope.launch(Dispatchers.IO) {
+            userDao.deleteAll()
+            userDao.insertAll(*fakeUsers().toTypedArray())
+            postDao.insertAll(*fakePosts(userDao.getAll()).toTypedArray())
+        }
+    }
+
     fun deleteItem(item: IListItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (item::class == User::class) {
-                userDao.delete(item as User)
-            } else if (item::class == Post::class) {
-                postDao.delete(item as Post)
+            when (item) {
+                is User -> userDao.delete(item)
+                is Post -> postDao.delete(item)
             }
+        }
+    }
+
+    fun addUser(user: User) {
+        viewModelScope.launch(Dispatchers.IO) {
+            userDao.insertAll(user)
         }
     }
 }

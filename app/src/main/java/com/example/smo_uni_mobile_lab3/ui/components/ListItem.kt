@@ -1,4 +1,4 @@
-package com.example.smo_uni_mobile_lab3.ui.component
+package com.example.smo_uni_mobile_lab3.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -59,7 +62,8 @@ fun ListItem(item: IListItem, onDeleteClick: () -> Unit) {
                 ) {
                     Text(
                         text = item.title(),
-                        modifier = Modifier.padding(10.dp, 20.dp, 10.dp, 0.dp)
+                        modifier = Modifier
+                            .padding(10.dp, 20.dp, 10.dp, 0.dp)
                             .fillMaxWidth(0.5f)
                     )
                     Text(
@@ -67,7 +71,11 @@ fun ListItem(item: IListItem, onDeleteClick: () -> Unit) {
                         modifier = Modifier.padding(10.dp, 20.dp, 10.dp, 0.dp),
                         fontSize = 10.sp
                     )
-                    DeleteButton(onDeleteClick = onDeleteClick)
+                    AppButton(
+                        onClick = onDeleteClick,
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                        text = stringResource(R.string.delete)
+                    )
                 }
                 item.description()?.let { description ->
                     Text(
