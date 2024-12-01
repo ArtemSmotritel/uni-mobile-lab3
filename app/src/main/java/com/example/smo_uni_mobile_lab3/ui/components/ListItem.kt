@@ -3,6 +3,7 @@ package com.example.smo_uni_mobile_lab3.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,8 +41,9 @@ import com.example.smo_uni_mobile_lab3.R
 import com.example.smo_uni_mobile_lab3.models.IListItem
 
 @Composable
-fun ListItem(item: IListItem, onDeleteClick: () -> Unit) {
+fun ListItem(item: IListItem, menuItems: @Composable ColumnScope.( () -> Unit ) -> Unit) {
     var showMenu by remember { mutableStateOf(false) }
+    val hideMenu = { showMenu = false }
 
     Card(
         modifier = Modifier
@@ -87,10 +89,7 @@ fun ListItem(item: IListItem, onDeleteClick: () -> Unit) {
                             )
                         }
                         DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }, ) {
-                            DropdownMenuItem(text = { Text(stringResource(R.string.delete)) }, onClick = {
-                                showMenu = false
-                                onDeleteClick()
-                            }, colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error))
+                            menuItems(hideMenu)
                         }
                     }
                 }

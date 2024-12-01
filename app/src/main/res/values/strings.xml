@@ -14,4 +14,8 @@
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
+    <string name="no_user_selected">No user selected</string>
+    <string name="logged_in">Logged in: %1$s</string>
+    <string name="this_user_is_selected">This user is selected</string>
+    <string name="login_as">Login as %1$s</string>
 </resources>

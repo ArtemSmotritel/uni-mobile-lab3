@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 data class MainActivityState(
     val list: List<IListItem> = emptyList(),
     var loading: Boolean = true,
+    var currentUser: User? = null,
 )
 
 class MainActivityViewModel(private val userDao: UserDao, private val postDao: PostDao) :
@@ -36,7 +37,7 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
                 users.plus(posts)
             }.collect { list ->
                 _state.update { currentState ->
-                    currentState.copy(list = list, loading = false)
+                    currentState.copy(list = list, loading = false, currentUser = null)
                 }
             }
         }
@@ -63,5 +64,19 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
         viewModelScope.launch(Dispatchers.IO) {
             userDao.insertAll(user)
         }
+    }
+
+    fun loginAsUser(user: User?) {
+        _state.update { currentState ->
+            currentState.copy(
+                list = currentState.list,
+                loading = currentState.loading,
+                currentUser = user
+            )
+        }
+    }
+
+    fun logout() {
+        loginAsUser(null)
     }
 }
