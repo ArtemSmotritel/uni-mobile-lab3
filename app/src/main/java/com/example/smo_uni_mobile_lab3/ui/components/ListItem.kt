@@ -1,6 +1,7 @@
 package com.example.smo_uni_mobile_lab3.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,12 +9,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +41,8 @@ import com.example.smo_uni_mobile_lab3.models.IListItem
 
 @Composable
 fun ListItem(item: IListItem, onDeleteClick: () -> Unit) {
+    var showMenu by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 5.dp)
@@ -66,16 +79,20 @@ fun ListItem(item: IListItem, onDeleteClick: () -> Unit) {
                             .padding(10.dp, 20.dp, 10.dp, 0.dp)
                             .fillMaxWidth(0.5f)
                     )
-                    Text(
-                        text = item.id(),
-                        modifier = Modifier.padding(10.dp, 20.dp, 10.dp, 0.dp),
-                        fontSize = 10.sp
-                    )
-                    AppButton(
-                        onClick = onDeleteClick,
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                        text = stringResource(R.string.delete)
-                    )
+                    Box {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(R.string.menu)
+                            )
+                        }
+                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }, ) {
+                            DropdownMenuItem(text = { Text(stringResource(R.string.delete)) }, onClick = {
+                                showMenu = false
+                                onDeleteClick()
+                            }, colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error))
+                        }
+                    }
                 }
                 item.description()?.let { description ->
                     Text(
