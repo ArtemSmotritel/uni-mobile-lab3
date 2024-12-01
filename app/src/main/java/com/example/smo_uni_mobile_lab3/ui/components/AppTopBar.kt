@@ -26,8 +26,7 @@ fun AppTopBar(onReset: () -> Unit, onAddUser: () -> Unit, currentUser: User?) {
     var showMenu by remember { mutableStateOf(false) }
 
     TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        titleContentColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ), title = {
         Text(stringResource(R.string.users_posts))
     }, actions = {
