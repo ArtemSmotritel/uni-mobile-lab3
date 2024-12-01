@@ -22,7 +22,7 @@ import com.example.smo_uni_mobile_lab3.models.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(onReset: () -> Unit, onAddUser: () -> Unit, currentUser: User?) {
+fun AppTopBar(onReset: () -> Unit, onAddUser: () -> Unit, onAddPost: () -> Unit, currentUser: User?) {
     var showMenu by remember { mutableStateOf(false) }
 
     TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
@@ -51,6 +51,10 @@ fun AppTopBar(onReset: () -> Unit, onAddUser: () -> Unit, currentUser: User?) {
                 showMenu = false
                 onAddUser()
             })
+            DropdownMenuItem(text = { Text(stringResource(R.string.add_post)) }, onClick = {
+                showMenu = false
+                onAddPost()
+            }, enabled = currentUser != null)
         }
     })
 }

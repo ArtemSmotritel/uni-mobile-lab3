@@ -60,9 +60,12 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
         }
     }
 
-    fun addUser(user: User) {
+    fun addItem(item: IListItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            userDao.insertAll(user)
+            when (item) {
+                is User -> userDao.insertAll(item)
+                is Post -> postDao.insertAll(item)
+            }
         }
     }
 

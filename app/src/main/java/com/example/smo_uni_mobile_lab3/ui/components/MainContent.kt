@@ -18,17 +18,29 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.smo_uni_mobile_lab3.state.MainActivityViewModel
 import kotlinx.coroutines.flow.map
 
+enum class BottomSheetModalType {
+    NONE, ADD_USER, ADD_POST,
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainContent(vm: MainActivityViewModel) {
     val currentUser by vm.state.map { it.currentUser }.collectAsStateWithLifecycle(null)
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
+    var bottomSheetModalType by remember { mutableStateOf(BottomSheetModalType.NONE) }
+
+    val closeBottomSheet = { showBottomSheet = false; bottomSheetModalType = BottomSheetModalType.NONE }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         AppTopBar(
             onReset = { vm.reset() },
-            onAddUser = { showBottomSheet = true },
+            onAddUser = {
+                showBottomSheet = true; bottomSheetModalType = BottomSheetModalType.ADD_USER
+            },
+            onAddPost = {
+                showBottomSheet = true; bottomSheetModalType = BottomSheetModalType.ADD_POST
+            },
             currentUser = currentUser
         )
     }) { innerPadding ->
@@ -45,13 +57,20 @@ fun MainContent(vm: MainActivityViewModel) {
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = {
-                    showBottomSheet = false
+                    closeBottomSheet()
                 }, sheetState = sheetState
             ) {
-                AddUserForm(onSubmit = {
-                    vm.addUser(it)
-                    showBottomSheet = false
-                })
+                if (bottomSheetModalType == BottomSheetModalType.ADD_USER) {
+                    AddUserForm(onSubmit = {
+                        vm.addItem(it)
+                        closeBottomSheet()
+                    })
+                } else if (bottomSheetModalType == BottomSheetModalType.ADD_POST) {
+                    AddPostForm(onSubmit = {
+                        vm.addItem(it)
+                        closeBottomSheet()
+                    }, currentUser = currentUser)
+                }
             }
         }
     }
