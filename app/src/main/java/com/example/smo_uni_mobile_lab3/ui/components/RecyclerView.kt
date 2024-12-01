@@ -32,7 +32,7 @@ fun RecyclerView(vm: MainActivityViewModel = viewModel(), modifier: Modifier = M
             LazyColumn(
                 modifier = modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Top,
             ) {
                 items(state.list, itemContent = { item ->
                     ListItem(item, menuItems = { hideItemCallback ->
