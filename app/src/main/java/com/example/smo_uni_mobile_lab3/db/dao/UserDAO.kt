@@ -15,8 +15,8 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): List<User>
 
-    @Query("SELECT * FROM user WHERE id IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<User>
+    @Query("SELECT * FROM user WHERE api_id IN (:userIds)")
+    fun loadAllByApiIds(userIds: List<Long>): List<User>
 
     @Insert
     fun insertAll(vararg users: User)

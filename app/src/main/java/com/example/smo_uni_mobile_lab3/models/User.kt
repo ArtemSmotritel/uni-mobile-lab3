@@ -12,6 +12,7 @@ data class User(
     @ColumnInfo(name = "last_name") var lastName: String,
     @ColumnInfo(name = "email") var email: String,
     @ColumnInfo(name = "phone") var phone: String,
+    @ColumnInfo(name = "api_id") var apiId: Long? = null,
 ) : IListItem {
     @Ignore
     override fun id(): String {
@@ -36,12 +37,14 @@ data class User(
 
 class UserBuilder {
     private var id: Long = 0
+    private var apiId: Long? = null
     private var firstName: String = ""
     private var lastName: String = ""
     private var email: String = ""
     private var phone: String = ""
 
     fun id(id: Long) = apply { this.id = id }
+    fun apiId(apiId: Long?) = apply { this.apiId = apiId }
     fun firstName(firstName: String) = apply { this.firstName = firstName }
     fun lastName(lastName: String) = apply { this.lastName = lastName }
     fun email(email: String) = apply { this.email = email }
@@ -53,7 +56,8 @@ class UserBuilder {
             firstName = firstName,
             lastName = lastName,
             email = email,
-            phone = phone
+            phone = phone,
+            apiId = apiId,
         )
     }
 }

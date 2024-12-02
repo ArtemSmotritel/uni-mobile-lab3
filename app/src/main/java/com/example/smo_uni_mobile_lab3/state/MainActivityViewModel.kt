@@ -2,13 +2,15 @@ package com.example.smo_uni_mobile_lab3.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.smo_uni_mobile_lab3.api.JSONPlaceholderAPIRetrofitClient
+import com.example.smo_uni_mobile_lab3.api.mapper.PostMapper
+import com.example.smo_uni_mobile_lab3.api.mapper.UserMapper
+import com.example.smo_uni_mobile_lab3.api.repositories.JSONPlaceholderAPIRepository
 import com.example.smo_uni_mobile_lab3.db.dao.PostDao
 import com.example.smo_uni_mobile_lab3.db.dao.UserDao
 import com.example.smo_uni_mobile_lab3.models.IListItem
 import com.example.smo_uni_mobile_lab3.models.Post
 import com.example.smo_uni_mobile_lab3.models.User
-import com.example.smo_uni_mobile_lab3.models.fakePosts
-import com.example.smo_uni_mobile_lab3.models.fakeUsers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +28,9 @@ data class MainActivityState(
 class MainActivityViewModel(private val userDao: UserDao, private val postDao: PostDao) :
     ViewModel() {
 
+    private val repository =
+        JSONPlaceholderAPIRepository(JSONPlaceholderAPIRetrofitClient.apiService)
+
     private val _state = MutableStateFlow(MainActivityState())
     val state: StateFlow<MainActivityState> = _state.asStateFlow()
 
@@ -37,7 +42,7 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
                 users.plus(posts)
             }.collect { list ->
                 _state.update { currentState ->
-                    currentState.copy(list = list, loading = false, currentUser = null)
+                    currentState.copy(list = list, loading = false, currentUser = currentState.currentUser)
                 }
             }
         }
@@ -46,8 +51,18 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
     fun reset() {
         viewModelScope.launch(Dispatchers.IO) {
             userDao.deleteAll()
-            userDao.insertAll(*fakeUsers().toTypedArray())
-            postDao.insertAll(*fakePosts(userDao.getAll()).toTypedArray())
+
+            val apiUsers = repository.fetchUsers()
+            val mappedUsers = apiUsers?.map { UserMapper.map(it) }.orEmpty()
+            userDao.insertAll(*mappedUsers.toTypedArray())
+
+            val users = userDao.getAll()
+
+            val apiPosts = repository.fetchPosts()
+            val mappedPosts = apiPosts?.mapNotNull { PostMapper.map(it, users) }
+            if (mappedPosts != null) {
+                postDao.insertAll(*mappedPosts.toTypedArray())
+            }
         }
     }
 
@@ -72,9 +87,7 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
     fun loginAsUser(user: User?) {
         _state.update { currentState ->
             currentState.copy(
-                list = currentState.list,
-                loading = currentState.loading,
-                currentUser = user
+                list = currentState.list, loading = currentState.loading, currentUser = user
             )
         }
     }

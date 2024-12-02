@@ -29,6 +29,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -61,7 +63,7 @@ fun ListItem(item: IListItem, menuItems: @Composable ColumnScope.( () -> Unit ) 
                     contentDescription = "\"${item.title()}\" photo",
                     modifier = Modifier
                         .padding(8.dp)
-                        .size(60.dp)
+                        .size(70.dp)
                         .clip(RoundedCornerShape(CornerSize(6.dp)))
                         .align(alignment = Alignment.CenterVertically)
                 )
@@ -76,7 +78,9 @@ fun ListItem(item: IListItem, menuItems: @Composable ColumnScope.( () -> Unit ) 
                         text = item.title(),
                         modifier = Modifier
                             .padding(10.dp, 20.dp, 10.dp, 0.dp)
-                            .fillMaxWidth(0.5f)
+                            .fillMaxWidth(0.5f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Box {
                         IconButton(onClick = { showMenu = true }) {
@@ -94,7 +98,10 @@ fun ListItem(item: IListItem, menuItems: @Composable ColumnScope.( () -> Unit ) 
                     Text(
                         text = description,
                         modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 20.dp),
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis,
+                        style = TextStyle(lineHeight = 14.sp)
                     )
                 }
             }
