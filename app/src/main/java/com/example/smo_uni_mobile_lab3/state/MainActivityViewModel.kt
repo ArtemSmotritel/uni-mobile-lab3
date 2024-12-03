@@ -59,7 +59,8 @@ class MainActivityViewModel(private val userDao: UserDao, private val postDao: P
             val users = userDao.getAll()
 
             val apiPosts = repository.fetchPosts()
-            val mappedPosts = apiPosts?.mapNotNull { PostMapper.map(it, users) }
+            val photos = repository.fetchAlbumImages(2)
+            val mappedPosts = apiPosts?.mapNotNull { PostMapper.map(it, users, photos) }
             if (mappedPosts != null) {
                 postDao.insertAll(*mappedPosts.toTypedArray())
             }

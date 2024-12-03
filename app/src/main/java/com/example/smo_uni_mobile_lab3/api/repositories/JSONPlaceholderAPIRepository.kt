@@ -1,6 +1,7 @@
 package com.example.smo_uni_mobile_lab3.api.repositories
 
 import android.util.Log
+import com.example.smo_uni_mobile_lab3.api.dto.PhotoDTO
 import com.example.smo_uni_mobile_lab3.api.dto.PostDTO
 import com.example.smo_uni_mobile_lab3.api.dto.UserDTO
 import com.example.smo_uni_mobile_lab3.api.services.JSONPlaceholderAPIService
@@ -12,11 +13,9 @@ class JSONPlaceholderAPIRepository(private val apiService: JSONPlaceholderAPISer
         return withContext(Dispatchers.IO) {
             val response = apiService.getPosts()
             if (response.isSuccessful) {
-                response.body().also {
-                    Log.d("PostsRequest", "Posts: $it")
-                }
+                response.body()
             } else {
-                null // Handle errors appropriately
+                null
             }
         }
     }
@@ -27,7 +26,18 @@ class JSONPlaceholderAPIRepository(private val apiService: JSONPlaceholderAPISer
             if (response.isSuccessful) {
                 response.body()
             } else {
-                null // Handle errors appropriately
+                null
+            }
+        }
+    }
+
+    suspend fun fetchAlbumImages(albumId: Long): List<PhotoDTO>? {
+        return withContext(Dispatchers.IO) {
+            val response = apiService.getAlbumPhotos(albumId)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
             }
         }
     }

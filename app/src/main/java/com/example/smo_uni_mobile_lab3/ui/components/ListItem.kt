@@ -58,8 +58,8 @@ fun ListItem(item: IListItem, menuItems: @Composable ColumnScope.( () -> Unit ) 
                         .data(imageUrl)
                         .crossfade(true)
                         .build(),
-                    placeholder = painterResource(R.drawable.ic_launcher_background),
-                    error = painterResource(R.drawable.ic_launcher_background),
+                    placeholder = painterResource(R.drawable.image_placeholder),
+                    error = painterResource(R.drawable.image_error),
                     contentDescription = "\"${item.title()}\" photo",
                     modifier = Modifier
                         .padding(8.dp)
